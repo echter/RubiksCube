@@ -1,5 +1,6 @@
 #include "cube.hpp"
 #include "grid.hpp"
+#include "rubiks.hpp"
 #include "slice.hpp"
 
 class SFMLApplication {
@@ -36,6 +37,7 @@ public:
     glm::vec3 camera(0.0, 0.0, 6.0);
 
     bool running = true;
+    RubiksCube rubiks;
     while(running) {
       //Handle events
       sf::Event event;
@@ -44,6 +46,12 @@ public:
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             window.close();
             running = false;
+          }
+        }
+        if(event.type == sf::Event::KeyPressed) {
+          if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+            rubiks.slices[1][0].sliceModel = glm::rotate(rubiks.slices[1][0].sliceModel, 3.14f / 2.0f, glm::vec3(1.0, 0.0, 0.0));
+            std::cout << "call left" << std::endl;
           }
         }
         else if(event.type == sf::Event::MouseMoved) {
@@ -73,8 +81,8 @@ public:
       Grid grid;
       grid.draw(MVP);
 
-      Slice slice;
-      slice.draw(projection, view, model);
+      rubiks.draw(projection, view, model);
+
 
       //Swap buffer (show result)
       window.display();
