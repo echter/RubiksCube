@@ -65,21 +65,6 @@ public:
             }
         };
 
-
-        // unsigned int EBO;
-        // glGenBuffers(1, &EBO);
-
-        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        // //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        // // 3. copy our index array in a element buffer for OpenGL to use
-        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-
         glBufferData(GL_ARRAY_BUFFER, sizeof(verticesLongVersion), verticesLongVersion, GL_STATIC_DRAW);
 
         //Set vertex input attributes for shader program
@@ -160,10 +145,6 @@ public:
         glBindVertexArray(vertex_array_id);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        //glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT, 0);
-
-        //MVP = glm::translate(MVP, glm::vec3(1.5f, 0.0f, 0.0f));
-        //MVP = glm::rotate(MVP, 3.14159265359f / 2, glm::vec3(1.0f, 0.0f, 0.0f));
 
         //Unbind vertex array
         glBindVertexArray(0);

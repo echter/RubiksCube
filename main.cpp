@@ -1,5 +1,6 @@
 #include "cube.hpp"
 #include "grid.hpp"
+#include "slice.hpp"
 
 class SFMLApplication {
   class Window : public sf::Window {
@@ -71,8 +72,9 @@ public:
 
       Grid grid;
       grid.draw(MVP);
-      Cube cube;
-      cube.draw(projection, view, model);
+
+      Slice slice;
+      slice.draw(projection, view, model);
 
       //Swap buffer (show result)
       window.display();
