@@ -1,17 +1,5 @@
-#include <GL/glew.h>
-
-#include <SFML/Graphics.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/System.hpp>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <iostream>
-#include <memory>
-#include <mutex>
-
-#include "grid.cpp"
+#include "cube.hpp"
+#include "grid.hpp"
 
 class SFMLApplication {
   class Window : public sf::Window {
@@ -70,9 +58,11 @@ public:
       //Draw
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      auto view = glm::lookAt(glm::vec3(camera.x, camera.y, camera.z), //Camera position in World Space
-                              glm::vec3(camera.x, camera.y, 0.0),      //Camera looks towards this position
-                              glm::vec3(0.0, 1.0, 0.0));               //Up
+      auto view = glm::lookAt(glm::vec3(10, 10 + (camera.y * 10.0), 40.0), //Camera position in World Space
+                              glm::vec3(0.0, 0.0, 0.0),                    //Camera looks towards this position
+                              glm::vec3(0.0, 1.0, 0.0));                   //Up
+
+      view = glm::rotate(view, 1.0f * camera.x, glm::vec3(0.0, 1.0, 0.0));
 
       //Model matrix : an identity matrix (model will be at the origin)
       auto model = glm::mat4(1.0);
@@ -81,6 +71,8 @@ public:
 
       Grid grid;
       grid.draw(MVP);
+      Cube cube;
+      cube.draw(projection, view, model);
 
       //Swap buffer (show result)
       window.display();
