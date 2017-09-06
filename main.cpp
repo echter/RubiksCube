@@ -38,6 +38,14 @@ public:
 
     bool running = true;
     RubiksCube rubiks;
+    auto model = glm::mat4(1.0);
+    auto view = glm::lookAt(glm::vec3(10, 20, 40.0),   //Camera position in World Space
+                            glm::vec3(0.0, 0.0, 0.0),  //Camera looks towards this position
+                            glm::vec3(0.0, 1.0, 0.0)); //Up
+
+    glm::mat4 copyView = view;
+
+    rubiks.draw(projection, view, model);
     while(running) {
       //Handle events
       sf::Event event;
@@ -50,8 +58,15 @@ public:
         }
         if(event.type == sf::Event::KeyPressed) {
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            rubiks.slices[1][0].sliceModel = glm::rotate(rubiks.slices[1][0].sliceModel, 3.14f / 2.0f, glm::vec3(1.0, 0.0, 0.0));
+            rubiks.slices[1][0].sliceModel = glm::rotate(rubiks.slices[1][0].sliceModel, (float)M_PI / 2.0f, glm::vec3(0.0, 1.0, 0.0));
             std::cout << "call left" << std::endl;
+          }
+        }
+        if(event.type == sf::Event::KeyPressed) {
+          if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+            rubiks.switcher();
+            rubiks.slices[0][1].sliceModel = glm::rotate(rubiks.slices[1][0].sliceModel, (float)M_PI / 2.0f, glm::vec3(0.0, 0.0, 1.0));
+            std::cout << "call UP!!!" << std::endl;
           }
         }
         else if(event.type == sf::Event::MouseMoved) {
@@ -67,10 +82,7 @@ public:
       //Draw
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      auto view = glm::lookAt(glm::vec3(10, 10 + (camera.y * 10.0), 40.0), //Camera position in World Space
-                              glm::vec3(0.0, 0.0, 0.0),                    //Camera looks towards this position
-                              glm::vec3(0.0, 1.0, 0.0));                   //Up
-
+      view = copyView;
       view = glm::rotate(view, 1.0f * camera.x, glm::vec3(0.0, 1.0, 0.0));
 
       //Model matrix : an identity matrix (model will be at the origin)
@@ -81,8 +93,8 @@ public:
       Grid grid;
       grid.draw(MVP);
 
-      rubiks.draw(projection, view, model);
-
+      //rubiks.update(projection, view);
+      rubiks.update(projection, view);
 
       //Swap buffer (show result)
       window.display();

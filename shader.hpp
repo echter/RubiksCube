@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math.h>
+
 #include <GL/glew.h>
 
 #include <SFML/Graphics.hpp>
