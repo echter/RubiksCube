@@ -1,6 +1,7 @@
 #include "cube.hpp"
 #include "grid.hpp"
 #include "rubiks.hpp"
+#include "rubiksVersionB.hpp"
 #include "slice.hpp"
 
 class SFMLApplication {
@@ -37,15 +38,19 @@ public:
     glm::vec3 camera(0.0, 0.0, 6.0);
 
     bool running = true;
-    RubiksCube rubiks;
-    auto model = glm::mat4(1.0);
     auto view = glm::lookAt(glm::vec3(10, 20, 40.0),   //Camera position in World Space
                             glm::vec3(0.0, 0.0, 0.0),  //Camera looks towards this position
                             glm::vec3(0.0, 1.0, 0.0)); //Up
 
     glm::mat4 copyView = view;
+    auto model = glm::mat4(1.0);
 
-    rubiks.draw(projection, view, model);
+    RubiksVersionB rubiksB;
+
+    rubiksB.drawCubes(projection, view, model);
+    rubiksB.generateSlices(projection, view, model);
+
+
     while(running) {
       //Handle events
       sf::Event event;
@@ -58,14 +63,14 @@ public:
         }
         if(event.type == sf::Event::KeyPressed) {
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            rubiks.slices[1][0].sliceModel = glm::rotate(rubiks.slices[1][0].sliceModel, (float)M_PI / 2.0f, glm::vec3(0.0, 1.0, 0.0));
+            rubiksB.rotateHorizontalSlice(projection, view, 1);
             std::cout << "call left" << std::endl;
           }
         }
         if(event.type == sf::Event::KeyPressed) {
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             //rubiks.switcher();
-            rubiks.slices[0][1].sliceModel = glm::rotate(rubiks.slices[0][1].sliceModel, (float)M_PI / 2.0f, glm::vec3(1.0, 0.0, 0.0));
+            //rubiks.slices[0][1].sliceModel = glm::rotate(rubiks.slices[0][1].sliceModel, (float)M_PI / 2.0f, glm::vec3(1.0, 0.0, 0.0));
             std::cout << "call UP!!!" << std::endl;
           }
         }
@@ -93,8 +98,9 @@ public:
       Grid grid;
       grid.draw(MVP);
 
-      //rubiks.update(projection, view);
-      rubiks.update(projection, view);
+      rubiksB.drawSlices(projection, view);
+      //rubiksB.updateSlices(projection, view);
+
 
       //Swap buffer (show result)
       window.display();
