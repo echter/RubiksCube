@@ -12,22 +12,36 @@ public:
   }
 
   void draw(glm::mat4 &Projection, glm::mat4 &View, glm::mat4 &Model, int sliceNumber) {
-
+    bool horizontal = true;
     if(sliceNumber >= 4 && sliceNumber <= 6) {
       sliceNumber -= 3;
+      horizontal = false;
     }
 
     sliceModel = Model;
     glm::mat4 original = Model;
 
-    for(int i = 1; i < 4; i++) {
-      Model = glm::translate(Model, glm::vec3(4.2 * (i - 2), -4.2 + (4.2 * (sliceNumber - 1)), -4.2));
-      for(int k = 1; k < 4; k++) {
-        cubes[sliceNumber][i][k].model = Model;
-        cubes[sliceNumber][i][k].draw(Projection, View, cubes[sliceNumber][i][k].model);
-        Model = glm::translate(Model, glm::vec3(0.0, 0.0, 4.2));
+    if(horizontal) {
+      for(int i = 1; i < 4; i++) {
+        Model = glm::translate(Model, glm::vec3(4.2 * (i - 2), -4.2 + (4.2 * (sliceNumber - 1)), -4.2));
+        for(int k = 1; k < 4; k++) {
+          cubes[sliceNumber][i][k].model = Model;
+          cubes[sliceNumber][i][k].draw(Projection, View, cubes[sliceNumber][i][k].model);
+          Model = glm::translate(Model, glm::vec3(0.0, 0.0, 4.2));
+        }
+        Model = original;
       }
-      Model = original;
+    }
+    else {
+      for(int i = 1; i < 4; i++) {
+        Model = glm::translate(Model, glm::vec3(4.2 * (i - 2), -4.2 + (4.2 * (sliceNumber - 1)), -4.2));
+        for(int k = 1; k < 4; k++) {
+          cubes[sliceNumber][k][i].model = Model;
+          cubes[sliceNumber][k][i].draw(Projection, View, cubes[sliceNumber][i][k].model);
+          Model = glm::translate(Model, glm::vec3(0.0, 0.0, 4.2));
+        }
+        Model = original;
+      }
     }
   }
 
