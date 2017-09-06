@@ -65,7 +65,7 @@ public:
         if(event.type == sf::Event::KeyPressed) {
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             //rubiks.switcher();
-            rubiks.slices[0][1].sliceModel = glm::rotate(rubiks.slices[0][1].sliceModel, (float)M_PI / 2.0f, glm::vec3(0.0, 1.0, 0.0));
+            rubiks.slices[0][1].sliceModel = glm::rotate(rubiks.slices[0][1].sliceModel, (float)M_PI / 2.0f, glm::vec3(1.0, 0.0, 0.0));
             std::cout << "call UP!!!" << std::endl;
           }
         }

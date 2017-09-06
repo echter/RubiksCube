@@ -34,11 +34,11 @@ public:
     }
     else {
       for(int i = 1; i < 4; i++) {
-        Model = glm::translate(Model, glm::vec3(4.2 * (i - 2), -4.2 + (4.2 * (sliceNumber - 1)), -4.2));
+        Model = glm::translate(Model, glm::vec3(-4.2 + (4.2 * (sliceNumber - 1)), -4.2, 4.2 * (i - 2)));
         for(int k = 1; k < 4; k++) {
-          cubes[sliceNumber][k][i].model = Model;
-          cubes[sliceNumber][k][i].draw(Projection, View, cubes[sliceNumber][i][k].model);
-          Model = glm::translate(Model, glm::vec3(0.0, 0.0, 4.2));
+          cubes[sliceNumber][i][k].model = Model;
+          cubes[sliceNumber][i][k].draw(Projection, View, cubes[sliceNumber][i][k].model);
+          Model = glm::translate(Model, glm::vec3(0.0, 4.2, 0.0));
         }
         Model = original;
       }
