@@ -26,7 +26,7 @@ public:
     }
   }
 
-  void generateSlices(glm::mat4 &Projection, glm::mat4 &View, glm::mat4 &Model) {
+  void generateHorizontalSlices(glm::mat4 &Projection, glm::mat4 &View, glm::mat4 &Model) {
 
     for(int sliceNumber = 1; sliceNumber < 4; sliceNumber++) {
       slices[sliceNumber][0].sliceModel = Model;
@@ -55,5 +55,6 @@ public:
   void rotateHorizontalSlice(glm::mat4 &Projection, glm::mat4 &View, int sliceNumber) {
 
     slices[sliceNumber][0].sliceModel = glm::rotate(slices[sliceNumber][0].sliceModel, (float)M_PI / 2, glm::vec3(0.0, 1.0, 0.0));
+    std::cout << "call left" << std::endl;
   }
 };

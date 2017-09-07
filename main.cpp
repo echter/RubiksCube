@@ -48,7 +48,7 @@ public:
     RubiksVersionB rubiksB;
 
     rubiksB.drawCubes(projection, view, model);
-    rubiksB.generateSlices(projection, view, model);
+    rubiksB.generateHorizontalSlices(projection, view, model);
 
 
     while(running) {
@@ -64,14 +64,13 @@ public:
         if(event.type == sf::Event::KeyPressed) {
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             rubiksB.rotateHorizontalSlice(projection, view, 1);
-            std::cout << "call left" << std::endl;
           }
         }
         if(event.type == sf::Event::KeyPressed) {
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            //rubiks.switcher();
-            //rubiks.slices[0][1].sliceModel = glm::rotate(rubiks.slices[0][1].sliceModel, (float)M_PI / 2.0f, glm::vec3(1.0, 0.0, 0.0));
-            std::cout << "call UP!!!" << std::endl;
+            while(true) {
+              rubiksB.updateSlices(projection, view);
+            }
           }
         }
         else if(event.type == sf::Event::MouseMoved) {
