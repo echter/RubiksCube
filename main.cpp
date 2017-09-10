@@ -49,6 +49,8 @@ public:
 
     rubiksB.drawCubes(projection, view, model);
     rubiksB.generateHorizontalSlices(projection, view, model);
+    rubiksB.generateVerticalSlices(projection, view, model);
+    bool horizontal = true;
 
 
     while(running) {
@@ -63,13 +65,27 @@ public:
         }
         if(event.type == sf::Event::KeyPressed) {
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            rubiksB.rotateHorizontalSlice(projection, view, 1);
+            horizontal = true;
+            rubiksB.generateNewHorizontalSlices(projection, view, 1);
+            rubiksB.rotateHorizontalSlice(projection, view, model, 1);
           }
         }
         if(event.type == sf::Event::KeyPressed) {
           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            while(true) {
-              rubiksB.updateSlices(projection, view);
+            //while(true) {
+            horizontal = false;
+            rubiksB.generateNewVerticalSlices(projection, view, 1);
+            rubiksB.rotateVerticalSlice(projection, view, model, 1);
+            //}
+          }
+        }
+        if(event.type == sf::Event::KeyPressed) {
+          if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+            if(horizontal) {
+              horizontal = false;
+            }
+            else {
+              horizontal = true;
             }
           }
         }
@@ -97,7 +113,12 @@ public:
       Grid grid;
       grid.draw(MVP);
 
-      rubiksB.drawSlices(projection, view);
+      if(horizontal == true) {
+        rubiksB.drawHorizontalSlices(projection, view);
+      }
+      else if(horizontal == false) {
+        rubiksB.drawVerticalSlices(projection, view);
+      }
       //rubiksB.updateSlices(projection, view);
 
 
