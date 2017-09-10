@@ -89,7 +89,7 @@ public:
   }
 
   void drawVerticalSlices(glm::mat4 &Projection, glm::mat4 &View) {
-    for(int i = 1; i < 2; i++) {
+    for(int i = 1; i < 4; i++) {
       slices[0][i].draw(Projection, View, slices[0][i].sliceModel); //Draw the cubes in the slice
     }
   }
@@ -120,28 +120,20 @@ public:
 
   void updateNewCubesForRotateVertical(int sliceNumber) {
 
-    cubes[1][sliceNumber][1].model = copy[3][sliceNumber][1].model * slices[0][sliceNumber].sliceModel;
-    cubes[2][sliceNumber][1].model = copy[3][sliceNumber][2].model * slices[0][sliceNumber].sliceModel;
-    cubes[3][sliceNumber][1].model = copy[3][sliceNumber][3].model * slices[0][sliceNumber].sliceModel;
-    cubes[3][sliceNumber][2].model = copy[2][sliceNumber][3].model * slices[0][sliceNumber].sliceModel;
-    cubes[3][sliceNumber][3].model = copy[1][sliceNumber][3].model * slices[0][sliceNumber].sliceModel;
-    cubes[2][sliceNumber][3].model = copy[1][sliceNumber][2].model * slices[0][sliceNumber].sliceModel;
-    cubes[1][sliceNumber][3].model = copy[1][sliceNumber][1].model * slices[0][sliceNumber].sliceModel;
-    cubes[1][sliceNumber][2].model = copy[2][sliceNumber][1].model * slices[0][sliceNumber].sliceModel;
-    cubes[2][sliceNumber][2].model = copy[2][sliceNumber][2].model * slices[0][sliceNumber].sliceModel;
+    for(int k = 1; k < 4; k++) {
+      for(int i = 1; i < 4; i++) {
+        cubes[k][sliceNumber][i].model = copy[4 - i][sliceNumber][k].model * slices[0][sliceNumber].sliceModel;
+      }
+    }
   }
 
   void updateNewCubesForRotateHorizontal(int sliceNumber) {
-
-    cubes[sliceNumber][1][1].model = copy[sliceNumber][3][1].model * slices[sliceNumber][0].sliceModel;
-    cubes[sliceNumber][2][1].model = copy[sliceNumber][3][2].model * slices[sliceNumber][0].sliceModel;
-    cubes[sliceNumber][3][1].model = copy[sliceNumber][3][3].model * slices[sliceNumber][0].sliceModel;
-    cubes[sliceNumber][3][2].model = copy[sliceNumber][2][3].model * slices[sliceNumber][0].sliceModel;
-    cubes[sliceNumber][3][3].model = copy[sliceNumber][1][3].model * slices[sliceNumber][0].sliceModel;
-    cubes[sliceNumber][2][3].model = copy[sliceNumber][1][2].model * slices[sliceNumber][0].sliceModel;
-    cubes[sliceNumber][1][3].model = copy[sliceNumber][1][1].model * slices[sliceNumber][0].sliceModel;
-    cubes[sliceNumber][1][2].model = copy[sliceNumber][2][1].model * slices[sliceNumber][0].sliceModel;
-    cubes[sliceNumber][2][2].model = copy[sliceNumber][2][2].model * slices[sliceNumber][0].sliceModel;
+    
+    for(int k = 1; k < 4; k++) {
+      for(int i = 1; i < 4; i++) {
+        cubes[sliceNumber][k][i].model = copy[sliceNumber][4-k][i].model * slices[sliceNumber][0].sliceModel;
+      }
+    }
   }
 
   void updateSliceCubes() {
@@ -155,30 +147,49 @@ public:
     }
   }
 
+  void drawTest(glm::mat4 &Projection, glm::mat4 &View, glm::mat4 &Model) {
+    for(int sliceNumber = 1; sliceNumber < 4; sliceNumber++) {
+      for(int i = 1; i < 4; i++) {
+        for(int k = 1; k < 4; k++) {
+          cubes[sliceNumber][i][k].draw(Projection, View, Model);
+        }
+      }
+    }
+  }
+
   void rotateVerticalSlice(glm::mat4 &Projection, glm::mat4 &View, glm::mat4 &Model, int sliceNumber) {
+    
+    generateNewVerticalSlices(Projection, View, 1);
+    generateNewVerticalSlices(Projection, View, 2);
+    generateNewVerticalSlices(Projection, View, 3);
 
     slices[0][sliceNumber].sliceModel = glm::rotate(slices[0][sliceNumber].sliceModel, (float)M_PI / 2, glm::vec3(1.0, 0.0, 0.0));
 
-    if(cubes[1][sliceNumber][1].model != copy[3][sliceNumber][1].model) {
-      updateNewCubesForRotateVertical(sliceNumber);
-      updateSliceCubes();
-      generateNewVerticalSlices(Projection, View, sliceNumber);
-      std::cout << "called" << std::endl;
-    }
+    updateNewCubesForRotateVertical(sliceNumber);
+    
+    drawVerticalSlices(Projection, View);
 
     std::cout << "Up" << std::endl;
   }
 
   void rotateHorizontalSlice(glm::mat4 &Projection, glm::mat4 &View, glm::mat4 &Model, int sliceNumber) {
 
+    generateNewHorizontalSlices(Projection, View, 1);
+    generateNewHorizontalSlices(Projection, View, 2);
+    generateNewHorizontalSlices(Projection, View, 3);
+
     slices[sliceNumber][0].sliceModel = glm::rotate(slices[sliceNumber][0].sliceModel, (float)M_PI / 2, glm::vec3(0.0, 1.0, 0.0));
 
-    if(cubes[sliceNumber][1][1].model != copy[sliceNumber][3][1].model) {
-      updateNewCubesForRotateHorizontal(sliceNumber);
-      updateSliceCubes();
-      generateNewHorizontalSlices(Projection, View, sliceNumber);
-      std::cout << "called" << std::endl;
-    }
+    updateNewCubesForRotateHorizontal(sliceNumber);
+    
+    drawHorizontalSlices(Projection, View);
+
+    // if(cubes[sliceNumber][1][1].model != copy[sliceNumber][3][1].model) {
+    //   //generateNewHorizontalSlices(Projection, View, sliceNumber);
+    //   updateNewCubesForRotateHorizontal(sliceNumber);
+    //   updateSliceCubes();
+    //   std::cout << "called" << std::endl;
+    // }
 
     std::cout << "call left" << std::endl;
   }
