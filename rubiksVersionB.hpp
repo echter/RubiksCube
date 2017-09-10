@@ -106,17 +106,29 @@ public:
   }
 
   void generateNewVerticalSlices(glm::mat4 &Projection, glm::mat4 &View, int sliceNumber) {
+    slices[0][sliceNumber].sliceModel = slices[0][sliceNumber].sliceModel;
 
     for(int i = 1; i < 4; i++) {
       for(int k = 1; k < 4; k++) {
         slices[0][sliceNumber].cubes[i][k].model = cubes[i][sliceNumber][k].model;
-        if(cubes[1][2][1].model == slices[0][sliceNumber].cubes[1][2].model) {
-          std::cout << "ayy" << std::endl;
-        }
+
         //slices[0][sliceNumber].cubes[i][k].model = cubes[i][sliceNumber][k].model;
         //slices[1][0].cubes[i][k].draw(Projection, View, slices[1][0].cubes[i][k].model); //Testing only
       }
     }
+  }
+
+  void updateNewCubesForRotateVertical(int sliceNumber) {
+
+    cubes[1][sliceNumber][1].model = copy[3][sliceNumber][1].model * slices[0][sliceNumber].sliceModel;
+    cubes[2][sliceNumber][1].model = copy[3][sliceNumber][2].model * slices[0][sliceNumber].sliceModel;
+    cubes[3][sliceNumber][1].model = copy[3][sliceNumber][3].model * slices[0][sliceNumber].sliceModel;
+    cubes[3][sliceNumber][2].model = copy[2][sliceNumber][3].model * slices[0][sliceNumber].sliceModel;
+    cubes[3][sliceNumber][3].model = copy[1][sliceNumber][3].model * slices[0][sliceNumber].sliceModel;
+    cubes[2][sliceNumber][3].model = copy[1][sliceNumber][2].model * slices[0][sliceNumber].sliceModel;
+    cubes[1][sliceNumber][3].model = copy[1][sliceNumber][1].model * slices[0][sliceNumber].sliceModel;
+    cubes[1][sliceNumber][2].model = copy[2][sliceNumber][1].model * slices[0][sliceNumber].sliceModel;
+    cubes[2][sliceNumber][2].model = copy[2][sliceNumber][2].model * slices[0][sliceNumber].sliceModel;
   }
 
   void updateNewCubesForRotateHorizontal(int sliceNumber) {
@@ -130,28 +142,31 @@ public:
     cubes[sliceNumber][1][3].model = copy[sliceNumber][1][1].model * slices[sliceNumber][0].sliceModel;
     cubes[sliceNumber][1][2].model = copy[sliceNumber][2][1].model * slices[sliceNumber][0].sliceModel;
     cubes[sliceNumber][2][2].model = copy[sliceNumber][2][2].model * slices[sliceNumber][0].sliceModel;
+  }
 
-    // cubes[sliceNumber][2][1] = copy[sliceNumber][3][2];
-    // cubes[sliceNumber][3][1] = copy[sliceNumber][3][3];
-    // cubes[sliceNumber][3][2] = copy[sliceNumber][2][3];
-    // cubes[sliceNumber][3][3] = copy[sliceNumber][1][3];
-    // cubes[sliceNumber][2][3] = copy[sliceNumber][1][2];
-    // cubes[sliceNumber][1][3] = copy[sliceNumber][1][1];
-    // cubes[sliceNumber][1][2] = copy[sliceNumber][2][1];
-    // cubes[sliceNumber][2][2] = copy[sliceNumber][2][2];
+  void updateSliceCubes() {
+    for(int sliceNumber = 1; sliceNumber < 4; sliceNumber++) {
+      for(int i = 1; i < 4; i++) {
+        for(int k = 1; k < 4; k++) {
+          slices[sliceNumber][0].cubes[i][k] = cubes[sliceNumber][i][k];
+          slices[0][sliceNumber].cubes[i][k] = cubes[i][sliceNumber][k];
+        }
+      }
+    }
   }
 
   void rotateVerticalSlice(glm::mat4 &Projection, glm::mat4 &View, glm::mat4 &Model, int sliceNumber) {
 
     slices[0][sliceNumber].sliceModel = glm::rotate(slices[0][sliceNumber].sliceModel, (float)M_PI / 2, glm::vec3(1.0, 0.0, 0.0));
 
-    // if(cubes[sliceNumber][1][1].model != copy[sliceNumber][3][1].model) {
-    //   updateNewCubesForRotateHorizontal(sliceNumber);
-    //   generateNewHorizontalSlices(Projection, View, sliceNumber);
-    //   std::cout << "called" << std::endl;
-    // }
+    if(cubes[1][sliceNumber][1].model != copy[3][sliceNumber][1].model) {
+      updateNewCubesForRotateVertical(sliceNumber);
+      updateSliceCubes();
+      generateNewVerticalSlices(Projection, View, sliceNumber);
+      std::cout << "called" << std::endl;
+    }
 
-    std::cout << "call left" << std::endl;
+    std::cout << "Up" << std::endl;
   }
 
   void rotateHorizontalSlice(glm::mat4 &Projection, glm::mat4 &View, glm::mat4 &Model, int sliceNumber) {
@@ -160,6 +175,7 @@ public:
 
     if(cubes[sliceNumber][1][1].model != copy[sliceNumber][3][1].model) {
       updateNewCubesForRotateHorizontal(sliceNumber);
+      updateSliceCubes();
       generateNewHorizontalSlices(Projection, View, sliceNumber);
       std::cout << "called" << std::endl;
     }
